@@ -45,7 +45,7 @@ int main(void) {
 
     //Exercício 2
 
-    uint8_t status; //Motor com sensores
+    uint8_t status = 0b11100000; // 
 
     if(status & (1<<7)){
         printf("Sensor 1 ativado, ligando motor 2\n");
@@ -59,6 +59,11 @@ int main(void) {
 
     if(status & (1<<5)){
         status = status^((1<<0)+(1<<1));
+    }
+
+    if(!(status & ((1<<7)+(1<<6)+(1<<5)))){
+        printf("Sensores desligados,desligando motores");
+        status = status &~((1<<1)+(1<<0));
     }
 
     
