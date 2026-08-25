@@ -1,6 +1,20 @@
 #include <stdio.h>
 #include<stdint.h>
 
+uint8_t inverteBits(uint8_t valor) {
+    uint8_t resultado = 0;
+
+    for (int i = 0; i < 8; i++) {
+        // Pega o bit i do valor original (0 ou 1)
+        uint8_t bit = (valor >> i) & 1;
+
+        // Coloca esse bit na posição espelhada (7 - i)
+        resultado = resultado | (bit << (7 - i));
+    }
+
+    return resultado;
+}
+
 int main(void) {
     //Exercício 1
     unsigned char valor = 0b01111111; // 127 em binário
@@ -65,6 +79,19 @@ int main(void) {
         printf("Sensores desligados,desligando motores");
         status = status &~((1<<1)+(1<<0));
     }
+
+    
+    //Desafio
+    int8_t entrada = 0b10110010;
+    uint8_t saida = inverteBits(entrada);
+
+    printf("Entrada: ");
+    for (int i = 7; i >= 0; i--) printf("%d", (entrada >> i) & 1);
+
+    printf("\nSaida:   ");
+    for (int i = 7; i >= 0; i--) printf("%d", (saida >> i) & 1);
+    printf("\n");
+
 
     
 
