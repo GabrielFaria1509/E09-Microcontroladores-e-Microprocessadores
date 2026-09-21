@@ -1,1 +1,18 @@
+Código : 
+#define F_CPU 16000000UL
+#include <avr/io.h>
+#include <util/delay.h>
+int main(void) 
+{ 
+ DDRC |= (1 << PC5); 
+   while (1) { 
+ PORTC ^= (1 << PC5); 
+ _delay_ms(500); 
+ while(!(PINC & (1 << PC6))){ 
+ PORTC &= ~(1 << PC5); 
+   } 
+ } 
+ return 0; 
+}
 
+ O código inicia configurando o pino PC5 como saída. Após isso, é inicializado um superloop que começa invertendo o estado da saída a cada meio segundo. Entretanto, o loop interno verifica se o botão conectado ao pino PC6 está pressionado e, enquanto ele estiver pressionado, a saída permanece desativada.
