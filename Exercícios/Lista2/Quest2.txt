@@ -25,9 +25,14 @@ DDRD &= ~((1<<PD0) + (1<<PD1) + (1<<PD2));
 
 Código otimizado : 
 
-DDRB |= (1<<PB0) + (1<<PB1) + (1<<PB2); 
-DDRD &= ~((1<<PD0) + (1<<PD1) + (1<<PD2));
+DDRB |= (1<<PB0) + (1<<PB1) + (1<<PB2); //Saídas
+DDRD &= ~((1<<PD0) + (1<<PD1) + (1<<PD2)); //Entradas
+
 
 while(1){
-  
-}
+  buttons = PIND & 0b00000111;
+
+   PORTB = buttons
+ }
+
+código foi otimizado porque, analisando os casos do switch, percebe-se que a saída PORTB recebe diretamente o mesmo valor correspondente às entradas PD0, PD1 e PD2. Os casos 0, 1, 2 e 3 apenas reproduzem os bits das entradas nas saídas. Portanto, o switch pode ser eliminado. Como PIND possui 8 bits, é utilizada uma máscara 0b00000111 para considerar somente os três bits correspondentes aos pinos PD0, PD1 e PD2. Assim, o valor obtido pode ser diretamente atribuído a PORTB, simplificando o código e reduzindo operações desnecessárias.
