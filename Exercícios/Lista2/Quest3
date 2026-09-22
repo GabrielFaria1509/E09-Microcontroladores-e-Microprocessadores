@@ -1,0 +1,11 @@
+Pergunta : Qual a importância dos resistores de pull-up ?
+
+Resposta : a importância do resistor de pull-up é garantir um estado lógico padrão
+e bem definido (nível alto) na ausência de outra fonte de sinal, evitando entradas
+flutuantes/instáveis — e, como consequência do seu valor resistivo, também limita a corrente
+de curto quando o pino é levado a nível baixo
+
+Pergunta :  ) É possível utilizar um resistor de pull-down no ATMega328p? Quando seria necessário utilizar 
+um ? 
+
+Resposta : Sim, é possível.
