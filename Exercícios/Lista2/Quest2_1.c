@@ -8,9 +8,4 @@ int main(void)
     DDRC |= (1 << PC0);
 
     PORTB = 0b00011111;  //Ativo pull up(Enquanto eu não pressionar eles estão em 1)
-
-    
-    
-
-
 }
