@@ -1,1 +1,7 @@
+Pergunta : O que é uma interrupção em um microcontrolador? Explique a diferença entre tratar um evento assíncrono (como o acionamento de um botão) por varredura (polling) e por interrupção, apontando ao menos uma vantagem e uma desvantagem de cada abordagem.
 
+Resposta : Uma interrupção é um mecanismo de hardware que permite ao microcontrolador suspender a execução do programa principal para atender imediatamente a um evento externo ou interno considerado prioritário, desviando o fluxo para uma rotina de serviço de interrupção (ISR) e retornando ao ponto exato de onde parou ao final dela.
+
+No polling/varredura, o programa verifica o estado do botão periodicamente dentro do loop principal. Vantagem: implementação simples, sem necessidade de configurar registradores extras. Desvantagem: desperdiça ciclos de CPU em verificações desnecessárias e tem latência variável — se o evento ocorrer entre duas checagens (ou durante uma tarefa demorada do loop), a resposta atrasa ou o evento pode até ser perdido.
+
+Na interrupção, o hardware sinaliza o evento e o processador desvia automaticamente para a ISR assim que ele ocorre. Vantagem: resposta rápida e mais eficiente, liberando a CPU para outras tarefas enquanto aguarda o evento. Desvantagem: exige maior cuidado de projeto — a ISR deve ser curta, variáveis compartilhadas com o main precisam ser declaradas do jeito certo para evitar condições de corrida, e a configuração de registradores de habilitação/prioridade torna a programação mais complexa.
