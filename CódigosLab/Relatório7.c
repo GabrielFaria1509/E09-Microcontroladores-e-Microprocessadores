@@ -26,6 +26,11 @@ void setup(){ //Arrumando configuração geral
     // PCMSK2 controla o PORT D -> PCINT20 (PD4)
     PCMSK2 |= (1 << PCINT20);
 
+    //Ou : 
+    //PCICR  = 0b00000101;  habilita PCIE0 (Porta B) e PCIE2 (Porta D)
+    //PCMSK0 = 0b00000101;  habilita PCINT0 (PB0) e PCINT2 (PB2)
+    //PCMSK2 = 0b00010000;  habilita PCINT20 (PD4)
+
     sei(); //Habilita interrupções globais
 }
 
