@@ -1,0 +1,15 @@
+Pergunta geral : Para que as interrupções funcionem no ATMega328p, algumas configurações são obrigatórias: 
+
+a)Qual função deve ser chamada para habilitar o uso de interrupções de forma geral no microcontrolador? 
+Resposta : A função que habilita interrupções de forma geral é a sei()
+
+b)Quais registradores — e quais bits especificamente — devem ser configurados para habilitar uma interrupção externa em INT0 ou em INT1? 
+Resposta : Os registradores usados são o EICRA e o EIMSK. No EICRA, usam-se os bits 0 a 3 (ISC00/ISC01 para INT0 e ISC10/ISC11 para INT1),
+que definem a condição de disparo (nível baixo, mudança, borda de descida ou de subida).
+No EIMSK, usam-se os bits 0 e 1 (INT0 e INT1), que efetivamente habilitam cada interrupção externa.
+
+c)Quais registradores — e quais bits especificamente — devem ser configurados para habilitar uma interrupção do tipo PCINT? 
+Resposta : Os registradores usados são o PCICR e o PCMSKx (x = 0, 1 ou 2).
+No PCICR, usam-se os bits 0 a 2 (PCIE0, PCIE1, PCIE2), que habilitam o grupo de pinos de cada porta (B, C e D, respectivamente).
+Em cada PCMSKx, usa-se o bit PCINTn correspondente ao pino físico específico que deve gerar a interrupção
+— por exemplo, para os botões (PB0, PB2 e PD4), seriam os bits 0 e 2 do PCMSK0 e o bit 4 do PCMSK2.
