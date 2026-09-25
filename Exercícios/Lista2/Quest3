@@ -19,5 +19,5 @@ configuração lógica em nível de hardware a partir da informação aplicada n
 Resposta : Utiliza-se o DDRx para configurar, pino a pino, se ele atua como entrada ou saída, atribuindo 1 aos bits que serão saída e 0 aos que serão entrada.
 Em nível de hardware, cada bit do DDRx controla um multiplexador interno do pino:
 quando DDxn=1, o buffer de saída (estágio push-pull) é conectado ao pino, permitindo que o bit correspondente de
-PORTx force nível alto ou baixo nele;esse buffer é desconectado e o pino fica em alta impedância (tri-state),
+PORTx force nível alto ou baixo nele;quando DDxn=0,esse buffer é desconectado e o pino fica em alta impedância (tri-state),
 podendo ainda ter o resistor de pull-up interno ativado através do bit de PORTx.
