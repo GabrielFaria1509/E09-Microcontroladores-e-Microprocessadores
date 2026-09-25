@@ -1,0 +1,9 @@
+Pergunta : Descreva, passo a passo, o que acontece do ponto de vista do processador quando uma interrupção habilitada é detectada
+— desde o programa principal em execução até o retorno a esse mesmo ponto.
+Sua resposta deve mencionar, no mínimo: a suspensão do programa em execução, o desvio para a ISR (Interrupt Service Routine) correspondente 
+e o retorno da rotina ao programa principal.
+
+Resposta : 
+O programa é executado normalmente até ser disparado a mudança de transição que ativa a interrupção, assim a interrupção desvia o fluxo do loop principal para
+uma função chamada ISR(Interrupt Service Routine), executando o loop interno da função e, após concluído o loop da função, o processador retorna ao ponto onde
+parou no programa principal.
