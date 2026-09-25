@@ -8,4 +8,16 @@ de curto quando o pino é levado a nível baixo
 Pergunta :  ) É possível utilizar um resistor de pull-down no ATMega328p? Quando seria necessário utilizar 
 um ? 
 
-Resposta : Sim, é possível.
+Resposta : Sim, é possível.Um pino de entrada digital "flutuante" (sem nada puxando pra HIGH nem pra LOW) fica com
+tensão indefinida, captando ruído do ambiente e lendo valores aleatórios (LOW/HIGH alternando sem motivo).
+Você precisa de um resistor de polarização (pull-up ou pull-down) para garantir um estado padrão bem definido quando o botão/chave não está acionado.
+O pull-down não conta com os resistores internos para ser configurado no software, é necessário montar manualemnte.
+
+Perginta : Por que utilizamos o registrador DDRx? Pesquise no manual (datasheet) como é feita a 
+configuração lógica em nível de hardware a partir da informação aplicada neste registradorr
+
+Resposta : Utiliza-se o DDRx para configurar, pino a pino, se ele atua como entrada ou saída, atribuindo 1 aos bits que serão saída e 0 aos que serão entrada.
+Em nível de hardware, cada bit do DDRx controla um multiplexador interno do pino:
+quando DDxn=1, o buffer de saída (estágio push-pull) é conectado ao pino, permitindo que o bit correspondente de
+PORTx force nível alto ou baixo nele;esse buffer é desconectado e o pino fica em alta impedância (tri-state),
+podendo ainda ter o resistor de pull-up interno ativado através do bit de PORTx.
