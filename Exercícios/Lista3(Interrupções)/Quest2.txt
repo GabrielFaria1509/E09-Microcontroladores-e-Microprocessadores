@@ -4,6 +4,4 @@ Sua resposta deve mencionar, no mínimo: a suspensão do programa em execução,
 e o retorno da rotina ao programa principal.
 
 Resposta : 
-O programa é executado normalmente até ser disparado a mudança de transição que ativa a interrupção, assim a interrupção desvia o fluxo do loop principal para
-uma função chamada ISR(Interrupt Service Routine), executando o loop interno da função e, após concluído o loop da função, o processador retorna ao ponto onde
-parou no programa principal.
+O programa é executado normalmente até ocorrer o evento que ativa a interrupção (habilitada nos registradores EIMSK/EICRA, para interrupções externas INT0/INT1, ou PCICR/PCIE/PCMSK, para interrupções por mudança de estado de pino - PCINT). Ao ser detectada, o processador termina a instrução atual, salva o endereço de retorno e desvia o fluxo do programa principal para a ISR correspondente. Após a ISR concluir sua execução, o processador retorna ao ponto exato onde parou no programa principal, através da instrução RETI, continuando a execução normalmente.
