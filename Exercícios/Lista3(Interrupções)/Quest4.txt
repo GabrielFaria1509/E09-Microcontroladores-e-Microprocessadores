@@ -1,3 +1,5 @@
 Pergunta geral : Consulte o datasheet do ATMega328p (seção de vetores de interrupção — Interrupt Vectors) e responda:
 
-a)Qual o número e o endereço (address) do vetor de interrupção associado a INT0, a INT1 e a cada um dos três grupos de PCINT (PCINT0, PCINT1 e PCINT2)? 
+a)Qual o número e o endereço (address) do vetor de interrupção associado a INT0, a INT1 e a cada um dos três grupos de PCINT (PCINT0, PCINT1 e PCINT2)?
+Segundo a tabela de vetores de interrupção do datasheet, INT0 é o vetor de número 2, no endereço 0x0002; INT1 é o vetor de número 3, no endereço 0x0004; PCINT0 é o vetor de número 4, no endereço 0x0006; PCINT1 é o vetor de número 5, no endereço 0x0008; e PCINT2 é o vetor de número 6, no endereço 0x000A.
+Vale destacar que o vetor de número 1 (endereço 0x0000) é reservado para o RESET, e que cada vetor ocupa 2 words de instrução, por isso os endereços avançam de 2 em 2.
