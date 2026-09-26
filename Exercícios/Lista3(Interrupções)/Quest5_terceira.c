@@ -27,7 +27,7 @@ ISR(INT0_vect){
 
 int main(void){
   DDRD &= ~(1<<PD3);      // PD3 (INT1) como entrada
-  DDRD &= ~(1<<PD2);      // PD3 (INT0) como entrada
+  DDRD &= ~(1<<PD2);      // PD2 (INT0) como entrada
   
   DDRD |= (1<<PD4) | (1<<PD5) | (1<<PD6); // LEDs como saída
 
@@ -36,8 +36,8 @@ int main(void){
   EIMSK |= (1 << INT1) | (1 << INT0);   // habilita INT0 e INT1
 
   PORTD &= ~(1 << PD5); //led pino 5 desligado
-  PORTD &= ~(1 << PD4); //led puno 4 desligado
-  PORTD &= ~(1 << PD6); //led puno 4 desligado
+  PORTD &= ~(1 << PD4); //led pino 4 desligado
+  PORTD &= ~(1 << PD6); //led pino 4 desligado
   
   
   PORTD |= (1 << PD3);    // pull-up interno no PD3
