@@ -9,7 +9,8 @@
 
 //#define IS_BIT_SET(reg, bit) (((reg) >> (bit)) & 1) 
 
-#define IS_BIT_SET(reg,bit) (((reg)>> (bit)) & 1) //macro permite definir um código reutilizável, como uma operação
+#define IS_BIT_SET(reg,bit) (((reg)>> (bit)) & 1) 
+//macro permite definir um código reutilizável, como uma operação
 
 int main(void){
     
