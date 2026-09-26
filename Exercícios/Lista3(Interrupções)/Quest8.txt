@@ -1,0 +1,40 @@
+Pergunta : Diferentemente de INT0 e INT1, que possuem uma ISR dedicada para cada pino, as interrupções PCINT são agrupadas: uma única ISR (por exemplo, PCINT0_vect) 
+é executada sempre que qualquer um dos pinos do seu grupo (por exemplo, PCINT[7:0]) sofre uma mudança de nível — sem indicar, por si só, qual pino específico causou o evento.
+Proponha uma estratégia (pode incluir trecho de código, se desejar) que permita ao programa identificar, dentro da ISR, exatamente qual pino do grupo gerou a interrupção.
+Dica: pense em quais informações ficam disponíveis no registrador PINx antes e depois do evento, e como elas podem ser comparadas.
+
+Reposta : Como a ISR de PCINT é compartilhada por todo o grupo de pinos, é necessário guardar em uma variável volatile o estado anterior do registrador PINx (por exemplo, pinb_anterior)
+. Dentro da ISR, lê-se o valor atual de PINx e faz-se um XOR entre o valor atual e o anterior (mudou = PINB ^ pinb_anterior), o que resulta em 1 exatamente nos bits correspondentes
+aos pinos que mudaram de estado desde a última interrupção. A partir disso, usa-se um if(mudou & (1<<PBn)) pra identificar qual pino específico gerou o evento, 
+e pode-se checar o valor atual daquele bit para saber se foi uma transição de subida ou de descida. Ao final da ISR, atualiza-se a variável de estado anterior com o valor atual, 
+para a próxima comparação.
+
+
+
+volatile uint8_t pinb_anterior = 0xFF; // estado inicial (pull-up = tudo em HIGH)
+
+ISR(PCINT0_vect){
+    uint8_t pinb_atual = PINB;
+    uint8_t mudou = pinb_atual ^ pinb_anterior; // XOR: bit 1 = esse pino mudou
+
+    if(mudou & (1<<PB0)){
+        // PB0 foi o pino que mudou de estado
+        if(!(pinb_atual & (1<<PB0))){
+            // e o novo estado é LOW → botão pressionado
+            PORTD |= (1<<PD7);
+            _delay_ms(1000);
+            PORTD &= ~(1<<PD7);
+        }
+    }
+
+    if(mudou & (1<<PB2)){
+        // PB2 foi o pino que mudou de estado
+        if(!(pinb_atual & (1<<PB2))){
+            PORTD |= (1<<PD6);
+            _delay_ms(500);
+            PORTD &= ~(1<<PD6);
+        }
+    }
+
+    pinb_anterior = pinb_atual; // atualiza o snapshot pra próxima interrupção
+}
