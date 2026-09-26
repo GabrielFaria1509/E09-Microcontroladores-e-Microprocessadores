@@ -1,5 +1,4 @@
 
-Claude terminou a resposta
 //Pergunta : Utilizando o ATMega328p, escreva as linhas de código (registradores PCICR e PCMSKn) necessárias para habilitar interrupções por mudança de pino (PCINT) nos 
 //seguintes pinos: PB2, PB5, PC0 e PD7. Indique explicitamente quais bits de PCICR e quais registradores PCMSKn precisam ser configurados, e justifique cada escolha. 
 
