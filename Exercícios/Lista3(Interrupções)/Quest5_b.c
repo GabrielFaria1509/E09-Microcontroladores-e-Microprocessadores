@@ -3,8 +3,8 @@
 
 //b)Interrupção de descida no pino INT1; 
 
-#include<stdio.h>
 #include <avr/io.h>
+#include <avr/interrupt.h>
 #include <util/delay.h>
 
 ISR(INT1_vect){
@@ -17,15 +17,15 @@ ISR(INT1_vect){
 }
 
 int main(void){
-  DDRD &= ~(1<<PD3);      // PD3 (INT1) como entrada
+  DDRD &= ~(1<<PD3);           // PD3 (INT1) como entrada
   DDRD |= (1<<PD4) | (1<<PD5); // LEDs como saída
 
-  EICRA |= (1 << ISC11);  // Descida em INT1
-  EIMSK |= (1 << INT1);   // habilita INT0
+  EICRA |= (1 << ISC11);  // borda de descida em INT1
+  EIMSK |= (1 << INT1);   // habilita INT1
 
-  PORTD &= ~(1 << PD5); //led pino 5 desligado
-   PORTD &= ~(1 << PD4); //led puno 4 desligado
-  
+  PORTD &= ~(1 << PD5);
+  PORTD &= ~(1 << PD4);
+
   PORTD |= (1 << PD3);    // pull-up interno no PD3
 
   sei();
