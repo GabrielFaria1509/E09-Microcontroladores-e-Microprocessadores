@@ -1,0 +1,96 @@
+#define F_CPU 16000000UL
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <util/delay.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#define FOSC 16000000U            // Clock Speed
+#define BAUD 9600
+#define MYUBRR (FOSC / 16 / BAUD - 1)
+#define botao (1 << PD4)
+
+char msg_tx[20];                  // Buffer de transmissão
+volatile char msg_rx[32];         // Buffer de recepção (volatile: alterado na ISR)
+volatile int pos_msg_rx = 0;
+int tamanho_msg_rx = 5;           // 5 = tamanho de "zerar"
+volatile unsigned int x = 0;      // Contador de vezes que o botão foi pressionado
+
+// Protótipos das funções
+void UART_Init(unsigned int ubrr);
+void UART_Transmit(char *dados);
+
+
+int main(void)
+{
+    UART_Init(MYUBRR);
+
+    DDRD &= ~botao;               // PD4 como entrada
+    PORTD |= botao;               // Pull-up interno (botão em repouso = 1)
+
+    // Interrupção externa no PD4 (Pin Change PCINT20)
+    PCICR |= (1 << PCIE2);        // Habilita Pin Change do grupo PORTD
+    PCMSK2 |= (1 << PCINT20);     // Habilita só o pino PD4
+
+    sei();
+
+    UART_Transmit("Aperte o botao:\n");
+
+    // Super-loop: só confere se o computador enviou "zerar"
+    while (1)
+    {
+        if ((msg_rx[0] == 'z') &&
+            (msg_rx[1] == 'e') &&
+            (msg_rx[2] == 'r') &&
+            (msg_rx[3] == 'a') &&
+            (msg_rx[4] == 'r'))
+        {
+            x = 0;                // Zera a contagem
+            msg_rx[0] = 0;        // Invalida o buffer para não zerar de novo em loop
+            UART_Transmit("Contagem zerada\n");
+        }
+    }
+}
+
+// Interrupção do botão (Pin Change do PORTD)
+ISR(PCINT2_vect)
+{
+    if ((PIND & botao) == 0)      // O botão foi pressionado? (dispara também ao soltar)
+    {
+        
+        x++;
+        UART_Transmit("num vezes botao press: ");
+        itoa(x, msg_tx, 10);
+        UART_Transmit(msg_tx);
+        UART_Transmit("\n");
+
+        _delay_ms(500);           // Aguarda um tempo para evitar o bounce
+        PCIFR |= (1 << PCIF2);    // Descarta interrupções geradas pelo bounce durante a espera
+    }
+}
+
+// Interrupção de recepção da UART 
+ISR(USART_RX_vect)
+{
+    msg_rx[pos_msg_rx++] = UDR0;
+    if (pos_msg_rx == tamanho_msg_rx)
+        pos_msg_rx = 0;
+}
+
+void UART_Transmit(char *dados)
+{
+    while (*dados != 0)
+    {
+        while (!(UCSR0A & (1 << UDRE0)));   // Aguarda o registrador de transmissão esvaziar
+        UDR0 = *dados;
+        dados++;
+    }
+}
+
+void UART_Init(unsigned int ubrr)
+{
+    UBRR0H = (unsigned char)(ubrr >> 8);
+    UBRR0L = (unsigned char)ubrr;
+    UCSR0B = (1 << RXEN0) | (1 << TXEN0) | (1 << RXCIE0);
+    UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
+}

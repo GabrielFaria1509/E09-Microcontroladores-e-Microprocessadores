@@ -1,0 +1,78 @@
+#define F_CPU 16000000UL
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#define FOSC 16000000U            // Clock Speed
+#define BAUD 9600
+#define MYUBRR (FOSC / 16 / BAUD - 1)
+#define led_vermelho (1 << PD5)
+#define led_verde    (1 << PD6)
+
+char msg_tx[20];
+volatile char msg_rx[32];         // Buffer de recepção (volatile: alterado na ISR)
+volatile int pos_msg_rx = 0;
+int tamanho_msg_rx = 1;           // Comandos de 1 caractere ('9' ou '8')
+
+// Protótipos das funções
+void UART_Init(unsigned int ubrr);
+void UART_Transmit(char *dados);
+
+int main(void)
+{
+    UART_Init(MYUBRR);
+
+    DDRD |= led_vermelho | led_verde;       // PD5 e PD6 como saída
+    PORTD &= ~(led_vermelho | led_verde);   // Começa com os dois LEDs apagados
+
+    sei();
+
+    UART_Transmit("Digite 9 (vermelho) ou 8 (verde):\n");
+
+    // Super-loop
+    while (1)
+    {
+        if (msg_rx[0] == '9')                // O computador enviou '9'?
+        {
+            PORTD |= led_vermelho;           // Liga o vermelho
+            PORTD &= ~led_verde;             // Desliga o verde
+            UART_Transmit("Vermelho ligado\n");
+            msg_rx[0] = 0;                   // Limpa o comando para tratá-lo uma só vez
+        }
+
+        if (msg_rx[0] == '8')                // O computador enviou '8'?
+        {
+            PORTD |= led_verde;              // Liga o verde
+            PORTD &= ~led_vermelho;          // Desliga o vermelho
+            UART_Transmit("Verde ligado\n");
+            msg_rx[0] = 0;                   // Limpa o comando
+        }
+    }
+}
+
+// Interrupção de recepção da UART (igual ao roteiro)
+ISR(USART_RX_vect)
+{
+    msg_rx[pos_msg_rx++] = UDR0;
+    if (pos_msg_rx == tamanho_msg_rx)
+        pos_msg_rx = 0;
+}
+
+void UART_Transmit(char *dados)
+{
+    while (*dados != 0)
+    {
+        while (!(UCSR0A & (1 << UDRE0)));   // Aguarda o registrador de transmissão esvaziar
+        UDR0 = *dados;
+        dados++;
+    }
+}
+
+void UART_Init(unsigned int ubrr)
+{
+    UBRR0H = (unsigned char)(ubrr >> 8);
+    UBRR0L = (unsigned char)ubrr;
+    UCSR0B = (1 << RXEN0) | (1 << TXEN0) | (1 << RXCIE0);
+    UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
+}
